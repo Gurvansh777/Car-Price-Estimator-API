@@ -1,7 +1,10 @@
 """
+sudo pip3 install flask
 sudo pip3 install pandas
 sudo pip3 install scikit-learn
 """
+
+#Required
 from flask import Flask, jsonify, request
 import pickle
 import pandas as pd
@@ -9,9 +12,11 @@ import numpy as np
 
 app = Flask(__name__)
 
-car = pd.read_csv('CarPriceEstimator/data/dataset.csv')
+#Read dataset
+car = pd.read_csv('Car-Price-Estimator-API/data/dataset.csv')
 
 
+#Expose endpoint
 @app.route('/api/price', methods=["GET"])
 def get_price():
     try:
@@ -21,9 +26,9 @@ def get_price():
         odometer = request.args.get("odometer")
 
         if int(year) < 2011:
-            model = pickle.load(open('CarPriceEstimator/model/LinearRegressionModel-1.pkl', 'rb'))
+            model = pickle.load(open('Car-Price-Estimator-API/model/LinearRegressionModel-1.pkl', 'rb'))
         elif int(year) >= 2011:
-            model = pickle.load(open('CarPriceEstimator/model/LinearRegressionModel-2.pkl', 'rb'))
+            model = pickle.load(open('Car-Price-Estimator-API/model/LinearRegressionModel-2.pkl', 'rb'))
 
         prediction = model.predict(pd.DataFrame(columns=['model', 'manufacturer', 'year', 'odometer'],
                                                 data=np.array([car_name, car_make, year, odometer]).reshape(1, 4)))
